@@ -17,7 +17,7 @@ app.get("/product/:sku", async (req, res) => {
   try {
     // ⚡ данные прокси: вставь свои
     const proxyHost = "gate.decodo.com";  // например, gate.smartproxy.com
-    const proxyPort = 10001;                  // порт (обычно 10000 у Smartproxy)
+    const proxyPort = 40001;                  // порт (обычно 10000 у Smartproxy)
     const proxyUser = "spcjoogw8u";             // твой логин от прокси
     const proxyPass = "3i3Z8Av6hthZLwcki+";             // твой пароль от прокси
 
