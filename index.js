@@ -17,8 +17,8 @@ app.get("/product/:sku", async (req, res) => {
   try {
     const response = await axios.get(apiUrl, {
       proxy: {
-        host: "154.65.39.7",  // 🔹 сюда вставь IP бесплатного прокси
-        port: 80            // 🔹 сюда вставь порт
+        host: "84.53.245.42",  // 🔹 сюда вставь IP бесплатного прокси
+        port: 41258           // 🔹 сюда вставь порт
       },
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36",
