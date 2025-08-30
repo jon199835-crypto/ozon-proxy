@@ -4,38 +4,50 @@ const axios = require("axios");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// тестовый корень
+// тестовый корневой маршрут
 app.get("/", (req, res) => {
   res.send("Ozon Proxy работает ✅. Используй /product/:sku");
 });
 
-// маршрут для SKU
+// основной маршрут
 app.get("/product/:sku", async (req, res) => {
   const sku = req.params.sku;
   const apiUrl = `https://www.ozon.ru/api/composer-api.bx/page/json/v2?url=/product/${sku}/`;
 
   try {
+    // ⚡ данные прокси: вставь свои
+    const proxyHost = "gate.decodo.com";  // например, gate.smartproxy.com
+    const proxyPort = 10001;                  // порт (обычно 10000 у Smartproxy)
+    const proxyUser = "spcjoogw8u";             // твой логин от прокси
+    const proxyPass = "3i3Z8Av6hthZLwcki+";             // твой пароль от прокси
+
     const response = await axios.get(apiUrl, {
       proxy: {
-        host: "84.53.245.42",  // 🔹 сюда вставь IP бесплатного прокси
-        port: 41258           // 🔹 сюда вставь порт
+        host: proxyHost,
+        port: proxyPort,
+        auth: {
+          username: proxyUser,
+          password: proxyPass
+        }
       },
       headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36",
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36",
         "Accept": "application/json",
         "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
       },
-      timeout: 15000
+      timeout: 20000 // до 20 секунд (прокси иногда медленные)
     });
 
     if (!response.data || typeof response.data !== "object") {
-      return res.json({ error: "Не получили JSON" });
+      return res.json({ error: "Не получили JSON от Ozon" });
     }
 
+    // парсим widgetStates
     let widgetStates = {};
     try {
       widgetStates = JSON.parse(response.data.widgetStates || "{}");
-    } catch {
+    } catch (err) {
       return res.json({ error: "Ошибка парсинга widgetStates" });
     }
 
