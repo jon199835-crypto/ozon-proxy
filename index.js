@@ -1,27 +1,32 @@
 const express = require("express");
 const axios = require("axios");
+const https = require("https");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// тестовый корневой маршрут
+// корневой маршрут
 app.get("/", (req, res) => {
   res.send("Ozon Proxy работает ✅. Используй /product/:sku");
 });
 
-// основной маршрут
+// маршрут для SKU
 app.get("/product/:sku", async (req, res) => {
   const sku = req.params.sku;
   const apiUrl = `https://www.ozon.ru/api/composer-api.bx/page/json/v2?url=/product/${sku}/`;
 
   try {
-    // ⚡ данные прокси: вставь свои
+     // ⚡ данные прокси: вставь свои
     const proxyHost = "gate.decodo.com";  // например, gate.smartproxy.com
     const proxyPort = 40001;                  // порт (обычно 10000 у Smartproxy)
     const proxyUser = "spcjoogw8u";             // твой логин от прокси
     const proxyPass = "3i3Z8Av6hthZLwcki+";             // твой пароль от прокси
 
+    // создаём агент, который игнорирует SSL-ошибки
+    const agent = new https.Agent({ rejectUnauthorized: false });
+
     const response = await axios.get(apiUrl, {
+      httpsAgent: agent, // игнор SSL
       proxy: {
         host: proxyHost,
         port: proxyPort,
@@ -36,18 +41,17 @@ app.get("/product/:sku", async (req, res) => {
         "Accept": "application/json",
         "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
       },
-      timeout: 20000 // до 20 секунд (прокси иногда медленные)
+      timeout: 20000
     });
 
     if (!response.data || typeof response.data !== "object") {
       return res.json({ error: "Не получили JSON от Ozon" });
     }
 
-    // парсим widgetStates
     let widgetStates = {};
     try {
       widgetStates = JSON.parse(response.data.widgetStates || "{}");
-    } catch (err) {
+    } catch {
       return res.json({ error: "Ошибка парсинга widgetStates" });
     }
 
@@ -72,6 +76,7 @@ app.get("/product/:sku", async (req, res) => {
   }
 });
 
+// запуск сервера
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
