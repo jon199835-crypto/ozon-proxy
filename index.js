@@ -40,6 +40,11 @@ app.get("/product/:sku", async (req, res) => {
   }
 });
 
+// обязательный маршрут для проверки
+app.get("/", (req, res) => {
+  res.send("Ozon proxy работает ✅. Используй /product/:sku");
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
