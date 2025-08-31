@@ -1,53 +1,38 @@
 const express = require("express");
 const axios = require("axios");
-const https = require("https");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// корневой маршрут
+// ⚡ вставь сюда свой ключ от ScraperAPI
+const SCRAPER_API_KEY = process.env.SCRAPER_API_KEY || "b411aea5a9aa179ec0e6e24eeb304689";
+
 app.get("/", (req, res) => {
-  res.send("Ozon Proxy работает ✅. Используй /product/:sku");
+  res.send("Ozon Proxy через ScraperAPI работает ✅. Используй /product/:sku");
 });
 
-// маршрут для SKU
 app.get("/product/:sku", async (req, res) => {
   const sku = req.params.sku;
-  const apiUrl = `https://www.ozon.ru/api/composer-api.bx/page/json/v2?url=/product/${sku}/`;
+  const targetUrl = `https://www.ozon.ru/api/composer-api.bx/page/json/v2?url=/product/${sku}/`;
 
   try {
-     // ⚡ данные прокси: вставь свои
-    const proxyHost = "gate.decodo.com";  // например, gate.smartproxy.com
-    const proxyPort = 40001;                  // порт (обычно 10000 у Smartproxy)
-    const proxyUser = "spcjoogw8u";             // твой логин от прокси
-    const proxyPass = "3i3Z8Av6hthZLwcki+";             // твой пароль от прокси
+    // обращаемся через ScraperAPI
+    const scraperUrl = `http://api.scraperapi.com?api_key=${SCRAPER_API_KEY}&url=${encodeURIComponent(targetUrl)}&country=ru`;
 
-    // создаём агент, который игнорирует SSL-ошибки
-    const agent = new https.Agent({ rejectUnauthorized: false });
-
-    const response = await axios.get(apiUrl, {
-      httpsAgent: agent, // игнор SSL
-      proxy: {
-        host: proxyHost,
-        port: proxyPort,
-        auth: {
-          username: proxyUser,
-          password: proxyPass
-        }
-      },
+    const response = await axios.get(scraperUrl, {
+      timeout: 30000,
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36",
-        "Accept": "application/json",
-        "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
-      },
-      timeout: 20000
+        "Accept": "application/json"
+      }
     });
 
     if (!response.data || typeof response.data !== "object") {
-      return res.json({ error: "Не получили JSON от Ozon" });
+      return res.json({ error: "Не получили JSON от ScraperAPI" });
     }
 
+    // парсим widgetStates
     let widgetStates = {};
     try {
       widgetStates = JSON.parse(response.data.widgetStates || "{}");
@@ -76,7 +61,6 @@ app.get("/product/:sku", async (req, res) => {
   }
 });
 
-// запуск сервера
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
