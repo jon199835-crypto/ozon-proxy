@@ -1,35 +1,39 @@
 export default async function handler(req, res) {
-  const GAS_EXEC_URL = "https://script.google.com/macros/s/AKfycbwzpsGmcBqPdXrrMqOvbdWvYN2mC2ElE872K0WWQKzGrWcHUIDzmv4Z0LbG_71nCp9j/exec"; 
-  // сюда вставь свой свежий googleusercontent-URL
+  // ТВОЙ АКТУАЛЬНЫЙ EXEC-URL (не меняй его; обновляй код в GAS через "Edit deployment")
+  const GAS_EXEC_URL = "https://script.google.com/macros/s/AKfycby09uPOCTy1XW6mFxjU5i6zOn0y0DUImXNJqnYJ_SGLcdAj4u8np2CN8WPBu819yUyY/exec";
 
-  if (req.method !== 'POST') {
+  if (req.method !== "POST") {
     try {
-      // пробросим GET в твой GAS
-      const r = await fetch(GAS_EXEC_URL);
+      // Для проверки в браузере проксируем GET → GAS doGet
+      const r = await fetch(GAS_EXEC_URL, { method: "GET", redirect: "follow" });
       const text = await r.text();
       return res.status(200).send("🔗 GAS ответ: " + text);
     } catch (err) {
-      return res.status(500).send("❌ Ошибка при GET в GAS: " + err.message);
+      return res.status(200).send("Proxy GET error: " + err.message);
     }
   }
 
   try {
-    const update = req.body;
-    console.log("📥 Telegram update:", JSON.stringify(update));
+    // Принимаем апдейт от Telegram и пересылаем в GAS
+    const update = req.body; // у Vercel body уже распарсен
+    // Если вдруг пусто — подстрахуемся:
+    const safeUpdate = update && Object.keys(update).length ? update : { ping: true };
 
     const r = await fetch(GAS_EXEC_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(update),
-      redirect: "follow"
+      body: JSON.stringify(safeUpdate),
+      redirect: "follow",            // ВАЖНО: позволяем редирект с exec на googleusercontent
     });
 
     const text = await r.text();
-    console.log("➡️ GAS ответ:", text);
+    console.log("➡️ GAS status:", r.status, "body:", text);
 
+    // Telegram счастлив с любым 200 — отдаём сразу
     return res.status(200).send("OK FORWARDED");
   } catch (err) {
-    console.error("❌ Proxy error:", err);
+    console.error("❌ Proxy POST error:", err);
+    // Всё равно 200, чтобы Telegram не ретраил
     return res.status(200).send("Proxy error");
   }
 }
