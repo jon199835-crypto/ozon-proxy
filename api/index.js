@@ -5,7 +5,7 @@ export const config = {
 };
 
 export default async function handler(req, res) {
-  const GAS_EXEC_URL = "https://script.google.com/macros/s/AKfycbyTv4zfPkUa2u66VGjXQwO3Fpvruo9RXnHYMtiYVb0cTGLZHyXolpObEJpFc0mdyPqp/exec";
+  const GAS_EXEC_URL = "https://script.google.com/macros/s/AKfycbwNGRPjiagCQrQuhQPamge-dMwySSmN4aHqfHY20m114mSeibKDy6PtL1XXCZ2G6zR2/exec";
 
   if (req.method !== "POST") {
     return res.status(200).send("✅ Proxy alive (exec, raw body)");
