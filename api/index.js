@@ -1,40 +1,19 @@
-export const config = {
-  api: {
-    bodyParser: false, // 🚫 отключаем встроенный парсер
-  },
-};
-
 export default async function handler(req, res) {
-  const GAS_EXEC_URL = "https://script.google.com/macros/s/AKfycbx0UzESS0QYpljogWZTGElERnBCddngdQnuqol4NWjFmk8aTjXCCvKoRdsJ4XbDBgdj/exec";
+  const TARGET_URL = "https://script.google.com/macros/s/AKfycbx0UzESS0QYpljogWZTGElERnBCddngdQnuqol4NWjFmk8aTjXCCvKoRdsJ4XbDBgdj/exec";
 
-  if (req.method !== "POST") {
-    return res.status(200).send("✅ Proxy alive (exec, raw body)");
+  if (req.method === "POST") {
+    const response = await fetch(TARGET_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(req.body)
+    });
+    const text = await response.text();
+    return res.status(200).send("OK FORWARDED\n" + text);
   }
 
-  try {
-    // читаем "сырое" тело
-    let rawBody = "";
-    req.on("data", chunk => {
-      rawBody += chunk;
-    });
-
-    req.on("end", async () => {
-      console.log("📦 RAW BODY:", rawBody);
-
-      const r = await fetch(GAS_EXEC_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: rawBody,        // форвардим как есть
-        redirect: "follow"
-      });
-
-      const text = await r.text();
-      console.log("➡️ GAS response:", r.status, text);
-
-      res.status(200).send("OK FORWARDED RAW");
-    });
-  } catch (err) {
-    console.error("❌ Proxy error:", err);
-    res.status(200).send("Proxy error: " + err.message);
+  if (req.method === "GET") {
+    return res.status(200).send("✅ Proxy alive, forwarding to GAS");
   }
+
+  res.status(405).send("Method Not Allowed");
 }
