@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  const GAS_EXEC_URL = "https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLifCWLCYfkqmQZfAz_PWr-lBseCHpycvHh6K-NwecC-s6lpr4GuP4reBJNba9gJB3WyBv-FpcaHr--JErbA-NqwG-hL3BIVZ0TYRH8K5FoDzoXZnWuYwHZfzUumgiDbDMpEBtPskPPRLPdyPhDhZUxzfJEHQLy8l-OXxYGNf95xZiIuFVhRM4qC860AIwM2QtUVCAUe5WHRz9ceVL79EBrRXgwpm9UvIiNv7e2XHdlefJDc4OnRPRPjW11UiqkauZaGKpgbYO71IQYv2iciis2yxlBmMA&lib=MWU1KQnTxyXH7F9CuBMTqaVnitNJBIhCK"; 
+  const GAS_EXEC_URL = "https://script.google.com/macros/s/AKfycbwzpsGmcBqPdXrrMqOvbdWvYN2mC2ElE872K0WWQKzGrWcHUIDzmv4Z0LbG_71nCp9j/exec"; 
   // сюда вставь свой свежий googleusercontent-URL
 
   if (req.method !== 'POST') {
