@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     console.log("📥 Telegram update:", JSON.stringify(update));
 
     // Пересылаем в Google Apps Script
-    const r = await fetch("https://script.google.com/macros/s/AKfycbxCDEN65BNjvSalSa2UpYMAqVV1VwLdPdS-5u9zkjQvicOhB5ueGd5S4BbQ4rxEYg4/exec", {
+    const r = await fetch("https://script.google.com/macros/s/AKfycby09uPOCTy1XW6mFxjU5i6zOn0y0DUImXNJqnYJ_SGLcdAj4u8np2CN8WPBu819yUyY/exec", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(update)
