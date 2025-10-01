@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   // ТВОЙ АКТУАЛЬНЫЙ EXEC-URL (не меняй его; обновляй код в GAS через "Edit deployment")
-  const GAS_EXEC_URL = "https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLj_liTQatrUKYauo7s3NEhLzM4atcr8yNLFasO3zCB7j3sICi2CHE_FXh_jAfpSkGpG2Ms5wVyZSEgLlo_Uj9RgupTz3Tb0I9DGOeAsEdoBqRJoCHCS9QRuwG7e1fH77n5NtfhMb4so-nc4T5mKWun0VtdyvsDqWu8H0hzEvF97_3E6JrYqiJTEcLyJUfuHmneJGmbWPAHGG44UI8N92PDLmsZoOQiQw40-m8IApHR6Ws9ITA5mtwqZPLHeBNfdhxsuHPg65hrAGR2Yn27XXco6_stq2A&amp;lib=MWU1KQnTxyXH7F9CuBMTqaVnitNJBIhCK";
+  const GAS_EXEC_URL = "https://script.google.com/macros/s/AKfycbxWvLm70bVemCrquxTJ6a9APW_cY4QHgLbF_fwRrh0mtL5zVvlgz86O9zFqP4FgnmV9/exec";
 
   if (req.method !== "POST") {
     try {
