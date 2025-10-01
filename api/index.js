@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  const GAS_EXEC_URL = "https://script.googleusercontent.com/macros/echo?user_content_key=AehSKLg-WlicVAu9SiUedQ84nDG9rCYKL8QkBwdyPphQuJBtzLF2v68tKbZNZrU41wHvogxdtOVWJoobmNtdwi_nuxq3liwO1OLBtBoDeeK9Kb3EvW8PxGGJ03IgC5xIA0puiS2Kf6vO1FpkNWrz-EXdRHFCHI2gHAPxUs3RopPjrfTcLMNuXLF5cskxIRmlOGcNohi1VbWOEp8G4SA_DKI_bwGQoATGXb0zq_Jl4e2lPm6InxxnJP1lYo69YXLRQA64hC65ZV3Jzib2pmnpAPWOLFiQw85ZUQ&lib=MWU1KQnTxyXH7F9CuBMTqaVnitNJBIhCK";
+  const GAS_EXEC_URL = "https://script.google.com/macros/s/AKfycbxWvLm70bVemCrquxTJ6a9APW_cY4QHgLbF_fwRrh0mtL5zVvlgz86O9zFqP4FgnmV9/exec";
 
   if (req.method !== "POST") {
     return res.status(200).send("✅ Proxy alive");
